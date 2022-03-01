@@ -1,4 +1,4 @@
-from tkinter import Frame
+#from tkinter import Frame
 import cv2
 import sys
 import argparse
@@ -31,6 +31,10 @@ fps_threshold = args.fps_threshold
 use_flaskapp = args.flask_app 
 print(use_flaskapp)
 vid = cv2.VideoCapture(camera_id)
+
+# CCTV Info
+#rtsp://admin:abc12345@192.168.1.5:554/Stream/Channels/101
+#rtsp://admin:abc12345@192.168.1.6:554/Stream/Channels/101
 
 def main():
   prev_frame_time = 0
@@ -71,6 +75,7 @@ def main():
     if cv2.waitKey(1) == ord('q'):
       break
 
+# Imshow Streaming
 def main2():
   prev_frame_time = 0
   new_frame_time = 0
