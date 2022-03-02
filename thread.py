@@ -9,7 +9,7 @@ def Receive():
   print("start Receive")
   cap = cv2.VideoCapture("rtsp://admin:abc12345@192.168.1.5:554/Stream/Channels/101")
   ret, frame = cap.read()
-  q.put(frame)
+  #q.put(frame)
   while ret:
       ret, frame = cap.read()
       q.put(frame)
@@ -18,9 +18,9 @@ def Receive():
 def Display():
   print("Start Displaying")
   while True:
-      if q.empty() !=True:
-        frame=q.get()
-        cv2.imshow("frame1", frame)
+      if q.empty() != True:
+        frame = q.get()
+        cv2.imshow("the video", frame)
       if cv2.waitKey(1) & 0xFF == ord('q'):
             break
             
