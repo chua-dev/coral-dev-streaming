@@ -28,7 +28,8 @@ parser = argparse.ArgumentParser(
 )
 
 parser.add_argument(
-  '-cam', '--camera_id', help='Video source to be stream, if default webcam no need to specify', default="rtsp://admin:abc12345@192.168.1.5:554/Stream/Channels/101",
+  '-cam', '--camera_id', help='Video Source', default=0,
+  #'-cam', '--camera_id', help='Video source', default="rtsp://admin:abc12345@192.168.1.5:554/Stream/Channels/101",
 )
 
 parser.add_argument(
