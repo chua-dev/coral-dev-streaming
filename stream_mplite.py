@@ -164,7 +164,7 @@ def main():
       scores = interpreter.get_tensor(output_details[1]['index'])[0]
       indexed_scores = np.flip(np.argsort(scores.flatten()))
 
-      pdb.set_trace()
+      #pdb.set_trace()
 
       # Put Text Arguments
       fps_sentence = f'FPS: {fps}'
