@@ -52,7 +52,7 @@ def main():
 
   while True:
     start_time=time.time()
-    image = vid.read()
+    success, image = vid.read()
 
     if image.any():
       # If source cannot be open / wrong source
@@ -95,7 +95,7 @@ def main2():
   while True:
     start_time=time.time()
     #success, image = vid.read()
-    image = vid.read()
+    success, image = vid.read()
 
     # If source cannot be open / wrong source
     if False:
