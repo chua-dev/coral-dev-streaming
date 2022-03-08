@@ -17,7 +17,7 @@ mp_drawing = mp.solutions.drawing_utils
 
 #pdb.set_trace()
 
-face_detection = mp_face_detection.FaceDetection(model_selection=1, min_detection_confidence=0.6)
+face_detection = mp_face_detection.FaceDetection(0.5)
 
 # Initiate Flask App
 from flask import Flask, render_template, Response
