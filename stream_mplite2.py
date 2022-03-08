@@ -193,63 +193,58 @@ def main2():
     #success, image = vid.read()
     image = vid.read()
 
-    # If source cannot be open / wrong source
-    if False:
-        sys.exit(
-            'STREAM ERROR: Either one of below happen \n1) Unable to read from video source, please verify settings \n2) Video finish playing no more frame to display'
-        )
+    if image:
+      new_frame_time = time.time()
+  
+      fps = 1/(new_frame_time-prev_frame_time)
+      prev_frame_time = new_frame_time
 
-    new_frame_time = time.time()
- 
-    fps = 1/(new_frame_time-prev_frame_time)
-    prev_frame_time = new_frame_time
+      fps_int = int(fps)
+      fps = str(fps_int)
 
-    fps_int = int(fps)
-    fps = str(fps_int)
+      image = imutils.resize(image, width=rescale_size)
+      height = image.shape[0]
 
-    image = imutils.resize(image, width=rescale_size)
-    height = image.shape[0]
+      # Image Processing For Detection Model
+      processing_image = cv2.resize(image, (input_width, input_height))
+      processing_image = np.expand_dims(processing_image, axis=0)
+      processing_image = (np.float32(processing_image) - input_mean) / input_std
+      processed_image = np.float32(processing_image)
 
-    # Image Processing For Detection Model
-    processing_image = cv2.resize(image, (input_width, input_height))
-    processing_image = np.expand_dims(processing_image, axis=0)
-    processing_image = (np.float32(processing_image) - input_mean) / input_std
-    processed_image = np.float32(processing_image)
+      # Invoke Detection & Get Result
+      interpreter.set_tensor(input_details[0]['index'], processed_image)
+      interpreter.invoke()
 
-    # Invoke Detection & Get Result
-    interpreter.set_tensor(input_details[0]['index'], processed_image)
-    interpreter.invoke()
+      # Getting Output & Result
+      rel_coordinate = interpreter.get_tensor(output_details[0]['index'])[0]
+      scores = interpreter.get_tensor(output_details[1]['index'])[0]
+      indexed_scores = np.flip(np.argsort(scores.flatten()))
 
-    # Getting Output & Result
-    rel_coordinate = interpreter.get_tensor(output_details[0]['index'])[0]
-    scores = interpreter.get_tensor(output_details[1]['index'])[0]
-    indexed_scores = np.flip(np.argsort(scores.flatten()))
+      boxes = decode_boxes(FACE_DECODE_OPTIONS, rel_coordinate.flatten(), scores, FACE_ANCHORS)
+      clean_boxes = non_max_suppression(FACE_NMS_OPTIONS, scores, boxes, NMS_WEIGHTED)
 
-    boxes = decode_boxes(FACE_DECODE_OPTIONS, rel_coordinate.flatten(), scores, FACE_ANCHORS)
-    clean_boxes = non_max_suppression(FACE_NMS_OPTIONS, scores, boxes, NMS_WEIGHTED)
+      for box in clean_boxes:
+        min_x = box["rect"]["min_x"] * input_width * rescale_size / 192
+        min_y = box["rect"]["min_y"] * input_height * height / 192
+        max_x = box["rect"]["max_x"] * input_width * rescale_size / 192
+        max_y = box["rect"]["max_y"] * input_height * height / 192
+        start_point = (int(min_x),int(min_y))
+        end_point = (int(max_x),int(max_y))
+        image = cv2.rectangle(image, start_point, end_point, (0,255,0), 1)
+      #pdb.set_trace()
 
-    for box in clean_boxes:
-      min_x = box["rect"]["min_x"] * input_width * rescale_size / 192
-      min_y = box["rect"]["min_y"] * input_height * height / 192
-      max_x = box["rect"]["max_x"] * input_width * rescale_size / 192
-      max_y = box["rect"]["max_y"] * input_height * height / 192
-      start_point = (int(min_x),int(min_y))
-      end_point = (int(max_x),int(max_y))
-      image = cv2.rectangle(image, start_point, end_point, (0,255,0), 1)
-    #pdb.set_trace()
+      # Put Text Arguments
+      fps_sentence = f'FPS: {fps}'
+      font = cv2.FONT_HERSHEY_SIMPLEX
+      image_color = (80, 220, 100) if fps_int > fps_threshold else (34, 201, 255)
+      thickness = 5
+      font_scale = 1.2
+      cv2.putText(image, fps_sentence, (50, 80), font, font_scale, image_color, thickness, cv2.LINE_4)
+      cv2.imshow('Live Capture', image)
+      #print(image.shape)
 
-    # Put Text Arguments
-    fps_sentence = f'FPS: {fps}'
-    font = cv2.FONT_HERSHEY_SIMPLEX
-    image_color = (80, 220, 100) if fps_int > fps_threshold else (34, 201, 255)
-    thickness = 5
-    font_scale = 1.2
-    cv2.putText(image, fps_sentence, (50, 80), font, font_scale, image_color, thickness, cv2.LINE_4)
-    cv2.imshow('Live Capture', image)
-    #print(image.shape)
-
-    if cv2.waitKey(1) == ord('q'):
-      break
+      if cv2.waitKey(1) == ord('q'):
+        break
 
 
 @app.route('/')
