@@ -16,6 +16,8 @@ mp_face_detection = mp.solutions.face_detection
 mp_drawing = mp.solutions.drawing_utils
 
 #pdb.set_trace()
+from decouple import config
+stream_source = f"rtsp://{config('CCTV_USERNAME')}:{config('CCTV_PASSWORD')}@192.168.1.5:554/Stream/Channels/101"
 
 face_detection = mp_face_detection.FaceDetection(model_selection=1, min_detection_confidence=0.6)
 
@@ -28,7 +30,7 @@ parser = argparse.ArgumentParser(
 )
 
 parser.add_argument(
-  '-cam', '--camera_id', help='Video source to be stream, if default webcam no need to specify', default="rtsp://admin:abc12345@192.168.1.5:554/Stream/Channels/101",
+  '-cam', '--camera_id', help='Video source to be stream, if default webcam no need to specify', default=stream_source,
 )
 
 parser.add_argument(

@@ -6,6 +6,9 @@ import argparse
 import imutils
 import cv2
 
+from decouple import config
+stream_source = f"rtsp://{config('CCTV_USERNAME')}:{config('CCTV_PASSWORD')}@192.168.1.5:554/Stream/Channels/101"
+
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
 ap.add_argument("-n", "--num-frames", type=int, default=100,
@@ -15,7 +18,7 @@ ap.add_argument("-d", "--display", type=int, default=-1,
 args = vars(ap.parse_args())
 
 # grab a pointer to the video stream and initialize the FPS counter
-vid_source = 'rtsp://admin:abc12345@192.168.1.5:554/Stream/Channels/101'
+vid_source = stream_source
 print(f"[INFO] sampling NORMAL frames from {vid_source}")
 stream = cv2.VideoCapture(vid_source)
 fps = FPS().start()

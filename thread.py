@@ -5,9 +5,12 @@ import threading
 
 q=queue.Queue()
 
+from decouple import config
+stream_source = f"rtsp://{config('CCTV_USERNAME')}:{config('CCTV_PASSWORD')}@192.168.1.5:554/Stream/Channels/101"
+
 def Receive():
   print("start Receive")
-  cap = cv2.VideoCapture("rtsp://admin:abc12345@192.168.1.5:554/Stream/Channels/101")
+  cap = cv2.VideoCapture(stream_source)
   ret, frame = cap.read()
   #q.put(frame)
   while ret:

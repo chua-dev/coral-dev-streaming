@@ -15,8 +15,11 @@ parser = argparse.ArgumentParser(
   formatter_class=argparse.ArgumentDefaultsHelpFormatter
 )
 
+from decouple import config
+stream_source = f"rtsp://{config('CCTV_USERNAME')}:{config('CCTV_PASSWORD')}@192.168.1.5:554/Stream/Channels/101"
+
 parser.add_argument(
-  '-cam', '--camera_id', help='Video source to be stream, if default webcam no need to specify', default="rtsp://admin:abc12345@192.168.1.5:554/Stream/Channels/101",
+  '-cam', '--camera_id', help='Video source to be stream, if default webcam no need to specify', default=stream_source,
 )
 
 parser.add_argument(
@@ -41,10 +44,6 @@ print(use_flaskapp)
 
 vid = cv2.VideoCapture(camera_id)
 #vid = WebcamVideoStream(src=camera_id).start()
-
-# CCTV Info
-#rtsp://admin:abc12345@192.168.1.5:554/Stream/Channels/101
-#rtsp://admin:abc12345@192.168.1.6:554/Stream/Channels/101
 
 def main():
   prev_frame_time = 0
