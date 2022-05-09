@@ -1,2 +1,2 @@
-rtsp://admin:abc12345@192.168.1.5:554/Stream/Channels/101
-rtsp://admin:abc12345@192.168.1.6:554/Stream/Channels/101
+rtsp://NAME:PASSWORD@192.168.1.5:554/Stream/Channels/101
+rtsp://NAME:PASSWORD@192.168.1.6:554/Stream/Channels/101

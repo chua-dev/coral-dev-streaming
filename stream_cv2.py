@@ -4,8 +4,6 @@ import sys
 import argparse
 import time
 import imutils
-from imutils.video import WebcamVideoStream
-from imutils.video import FPS
 
 # Initiate Flask App
 from flask import Flask, render_template, Response
