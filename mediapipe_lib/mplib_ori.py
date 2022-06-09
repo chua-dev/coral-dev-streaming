@@ -18,6 +18,7 @@ mp_drawing = mp.solutions.drawing_utils
 #pdb.set_trace()
 from decouple import config
 stream_source = f"rtsp://{config('CCTV_USERNAME')}:{config('CCTV_PASSWORD')}@192.168.1.5:554/Stream/Channels/101"
+stream_source = 0
 
 face_detection = mp_face_detection.FaceDetection(model_selection=1, min_detection_confidence=0.6)
 
@@ -166,6 +167,6 @@ def video_feed():
 
 if __name__ == '__main__':
   if use_flaskapp:
-    app.run(host='0.0.0.0', port=5000, threaded=True) 
+    app.run(host='0.0.0.0', port=5000, threaded=True)
   else: 
     main2()

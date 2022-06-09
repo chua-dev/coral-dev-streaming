@@ -31,7 +31,7 @@ parser = argparse.ArgumentParser(
 )
 
 parser.add_argument(
-  '-cam', '--camera_id', help='Video Source', default=0,
+  '-cam', '--camera_id', help='Video Source', default=stream_source,
   #'-cam', '--camera_id', help='Video source', default=stream_source,
 )
 
